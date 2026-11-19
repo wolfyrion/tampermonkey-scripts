@@ -1,0 +1,25 @@
+name: Update script list
+
+on:
+  push:
+    branches: [main]
+    paths: ["**/*.user.js", "**/README.md", "tools/build_readme.py"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/build_readme.py
+      - name: Commit if changed
+        run: |
+          if ! git diff --quiet README.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+            git commit -am "Update script list in README"
+            git push
+          fi

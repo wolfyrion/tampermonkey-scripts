@@ -1,27 +1,26 @@
 # Tampermonkey Scripts
 
-Userscripts by Wolfyrion. Install them with [Tampermonkey](https://www.tampermonkey.net/) (or Violentmonkey). Once installed, they update automatically from this repo.
+Userscripts by Wolfyrion. Install [Tampermonkey](https://www.tampermonkey.net/) (or Violentmonkey) first, then click **Install** next to a script. Installed scripts update automatically from this repo.
 
 ## Scripts
 
-### Steam Ownership Highlighter
+<!-- BEGIN SCRIPTS -->
+2 scripts. Click **Install** with Tampermonkey enabled; updates arrive automatically.
 
-Shows Steam ownership and wishlist badges on SteamGifts, r/GameDeals, r/FreeGameFindings, GG.deals, IsThereAnyDeal, Humble Bundle, Fanatical, IndieGala and Green Man Gaming. Includes Steam/ITAD hover prices and a filter that hides owned rows.
+| Script | Version | Description | |
+|---|---|---|---|
+| [noVNC Paste for Proxmox](novnc-paste-proxmox/) | 4.1 | When PASTE ON, right-click the Proxmox noVNC console to type your PC's clipboard into the VM | [Install](https://raw.githubusercontent.com/wolfyrion/tampermonkey-scripts/main/novnc-paste-proxmox/novnc-paste-proxmox.user.js) |
+| [Steam Ownership Highlighter - Stable](steam-ownership-highlighter/) | 5.7.3 | Steam ownership and wishlist badges (including name matching on Humble, Fanatical, IndieGala and Green Man Gaming), resilient refresh, safe owned-row filtering, and Steam/ITAD hover prices. | [Install](https://raw.githubusercontent.com/wolfyrion/tampermonkey-scripts/main/steam-ownership-highlighter/steam-ownership-highlighter.user.js) |
+<!-- END SCRIPTS -->
 
-**[Install](https://raw.githubusercontent.com/wolfyrion/tampermonkey-scripts/main/steam-ownership-highlighter/steam-ownership-highlighter.user.js)**
+Click a script's name to see its own page with setup notes.
 
-You need to be logged in to Steam in the same browser. If you want ITAD prices, enter an ITAD API key in the script's settings (optional).
+## Updating
 
-### noVNC Paste for Proxmox
-
-Types your PC's clipboard into a VM through the Proxmox noVNC console. That's handy for pasting long commands or passwords into a VM that has no clipboard sharing. Switch **PASTE ON**, then right-click the console to paste. It runs on any Proxmox web UI on port 8006.
-
-**[Install](https://raw.githubusercontent.com/wolfyrion/tampermonkey-scripts/main/novnc-paste-proxmox/novnc-paste-proxmox.user.js)**
-
-## Updates
-
-Tampermonkey checks this repo for new versions on its own. To update right away, open the Tampermonkey dashboard and choose **Utilities → Check for userscript updates**.
+Tampermonkey checks for new versions automatically. To check right away, open the Tampermonkey dashboard and choose **Utilities → Check for userscript updates**.
 
 ## Issues
 
-Report bugs or ask for features in [Issues](https://github.com/wolfyrion/tampermonkey-scripts/issues).
+Report bugs or ask for features in [Issues](https://github.com/wolfyrion/tampermonkey-scripts/issues). Please say which script it's about.
+
+<!-- This table is generated from each script's header by tools/build_readme.py (also run by GitHub Actions on push). Don't edit it by hand. -->
