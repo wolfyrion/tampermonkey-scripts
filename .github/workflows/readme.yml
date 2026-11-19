@@ -3,7 +3,9 @@ name: Update script list
 on:
   push:
     branches: [main]
-    paths: ["**/*.user.js", "**/README.md", "tools/build_readme.py"]
+    paths: ["scripts.json", "tools/build_readme.py", "README.md"]
+  schedule:
+    - cron: "17 4 * * *"   # daily, so new versions pushed to the script repos show up here
   workflow_dispatch:
 
 permissions:

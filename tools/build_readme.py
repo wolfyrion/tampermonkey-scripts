@@ -1,23 +1,29 @@
 #!/usr/bin/env python3
-"""Regenerate the script table in README.md from each script's ==UserScript== header.
+"""Regenerate the script table in README.md.
 
-Layout expected:  <folder>/<folder>.user.js   (optionally <folder>/README.md for details)
-The table is written between the BEGIN/END markers in README.md; everything else is left alone.
-Run from anywhere:  python3 tools/build_readme.py   (add --check to fail if README is out of date)
+Each script lives in its own repo. scripts.json lists them as {"repo": "owner/name", "file": "x.user.js"}.
+For every entry this reads the ==UserScript== header from the repo's main branch and writes one table row
+(name -> repo, version, description, install link) between the BEGIN/END markers in README.md.
+
+    python3 tools/build_readme.py            # fetch headers from GitHub
+    python3 tools/build_readme.py --check    # exit 1 if README.md is out of date
+To add a script: add a line to scripts.json and push. GitHub Actions also re-runs this daily so versions stay current.
 """
+import json
 import re
 import sys
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OWNER_REPO = "wolfyrion/tampermonkey-scripts"
-BRANCH = "main"
-RAW = f"https://raw.githubusercontent.com/{OWNER_REPO}/{BRANCH}"
 BEGIN, END = "<!-- BEGIN SCRIPTS -->", "<!-- END SCRIPTS -->"
 
 
-def header(path: Path) -> dict:
-    text = path.read_text(encoding="utf-8", errors="replace")
+def raw_url(repo: str, file: str, branch: str = "main") -> str:
+    return f"https://raw.githubusercontent.com/{repo}/{branch}/{file}"
+
+
+def header(text: str) -> dict:
     m = re.search(r"==UserScript==(.*?)==/UserScript==", text, re.S)
     meta: dict = {}
     for line in (m.group(1) if m else "").splitlines():
@@ -27,25 +33,34 @@ def header(path: Path) -> dict:
     return meta
 
 
+def fetch(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": "tampermonkey-scripts-index"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read().decode("utf-8", "replace")
+
+
 def cell(s: str) -> str:
     return s.replace("|", "\\|").replace("\n", " ").strip()
 
 
 def build_table() -> str:
+    entries = json.loads((ROOT / "scripts.json").read_text(encoding="utf-8"))
     rows = []
-    for js in sorted(ROOT.glob("*/*.user.js"), key=lambda p: header(p).get("name", p.stem).lower()):
-        folder = js.parent.name
-        meta = header(js)
-        name = meta.get("name", folder)
-        has_page = (js.parent / "README.md").exists()
-        title = f"[{cell(name)}]({folder}/)" if has_page else cell(name)
-        install = f"[Install]({RAW}/{folder}/{js.name})"
-        rows.append(f"| {title} | {cell(meta.get('version', '?'))} | {cell(meta.get('description', ''))} | {install} |")
-    head = [f"{len(rows)} script{'s' if len(rows) != 1 else ''}. Click **Install** with Tampermonkey enabled; updates arrive automatically.",
-            "",
-            "| Script | Version | Description | |",
-            "|---|---|---|---|"]
-    return "\n".join(head + rows)
+    for e in entries:
+        url = raw_url(e["repo"], e["file"], e.get("branch", "main"))
+        try:
+            meta = header(fetch(url))
+        except Exception as exc:  # keep the row even if a repo is briefly unreachable
+            print(f"warning: {e['repo']}: {exc}", file=sys.stderr)
+            meta = {}
+        name = meta.get("name", e["repo"].split("/")[1])
+        rows.append((name.lower(),
+                     f"| [{cell(name)}](https://github.com/{e['repo']}) | {cell(meta.get('version', '?'))} "
+                     f"| {cell(meta.get('description', ''))} | [Install]({url}) |"))
+    rows.sort()
+    n = len(rows)
+    return "\n".join([f"{n} script{'s' if n != 1 else ''}.", "",
+                      "| Script | Version | Description | |", "|---|---|---|---|"] + [r for _, r in rows])
 
 
 def main() -> int:
@@ -56,10 +71,7 @@ def main() -> int:
     new = re.sub(re.escape(BEGIN) + r".*?" + re.escape(END),
                  lambda _: f"{BEGIN}\n{build_table()}\n{END}", text, flags=re.S)
     if "--check" in sys.argv:
-        if new != text:
-            print("README.md is out of date: run python3 tools/build_readme.py")
-            return 1
-        return 0
+        return 0 if new == text else 1
     if new != text:
         readme.write_text(new, encoding="utf-8")
         print("README.md updated")
