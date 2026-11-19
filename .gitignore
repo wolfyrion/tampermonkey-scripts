@@ -1,0 +1,3 @@
+# Local Tampermonkey export data – personal settings/caches, never publish
+*.options.json
+*.storage.json
