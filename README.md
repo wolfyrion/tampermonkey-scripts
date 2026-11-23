@@ -10,7 +10,7 @@ Userscripts by Wolfyrion. Each script has its own repo with setup notes and an i
 | Script | Version | Description | |
 |---|---|---|---|
 | [noVNC Paste for Proxmox](https://github.com/wolfyrion/ProxmoxNoVnc) | 4.1 | When PASTE ON, right-click the Proxmox noVNC console to type your PC's clipboard into the VM | [Install](https://raw.githubusercontent.com/wolfyrion/ProxmoxNoVnc/main/proxmoxnovnc.user.js) |
-| [Steam Ownership Highlighter - Stable](https://github.com/wolfyrion/steam-ownership-highlighter) | 5.7.3 | Steam ownership and wishlist badges (including name matching on Humble, Fanatical, IndieGala and Green Man Gaming), resilient refresh, safe owned-row filtering, and Steam/ITAD hover prices. | [Install](https://raw.githubusercontent.com/wolfyrion/steam-ownership-highlighter/main/steam-ownership-highlighter.user.js) |
+| [Steam Ownership Highlighter - Stable](https://github.com/wolfyrion/steam-ownership-highlighter) | 5.9.0 | Steam ownership and wishlist badges (including name matching on Humble, Fanatical, IndieGala, Green Man Gaming, Loaded, Gamesplanet and Barter.vg), resilient refresh, safe owned-row filtering, and Steam/ITAD hover prices. | [Install](https://raw.githubusercontent.com/wolfyrion/steam-ownership-highlighter/main/steam-ownership-highlighter.user.js) |
 <!-- END SCRIPTS -->
 
 Click a script's name to open its repo.
